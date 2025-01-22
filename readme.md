@@ -38,7 +38,7 @@ pip install torch transformers funasr pyaudio numpy
 
 ## 使用方法
 
-建议从网盘链接这里下载一键包。
+建议从网盘链接下载一键包。
 
 ## 代码说明
 ### 初始化
