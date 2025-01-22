@@ -37,17 +37,8 @@ pip install torch transformers funasr pyaudio numpy
 ```
 
 ## 使用方法
-1.克隆项目到本地：
-```
-git clone https://github.com/yourusername/Qwen-Firefly-Neko-STT-Multi.git
-cd Qwen-Firefly-Neko-STT-Multi
-```
-2.确保模型文件夹和配置文件已正确放置在对应目录下。WIP
 
-3.运行主脚本：
-```
-python qwen-firefly-neko-stt-multi.py
-```
+建议从网盘链接这里下载一键包。
 
 ## 代码说明
 ### 初始化
