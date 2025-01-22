@@ -1,0 +1,1 @@
+{"GPT": {"v1": "GPT_weights_v2/\u6d41\u8424-e10.ckpt", "v2": "GPT_weights_v2/\u6d41\u8424-e10.ckpt"}, "SoVITS": {"v1": "SoVITS_weights_v2/\u6d41\u8424_e15_s810.pth", "v2": "GPT_SoVITS/pretrained_models/gsv-v2final-pretrained/s2G2333k.pth"}}

@@ -1,0 +1,15 @@
+{
+  "framework": "pytorch",
+  "task" : "punctuation",
+  "model": {"type" : "funasr"},
+  "pipeline": {"type":"funasr-pipeline"},
+  "model_name_in_hub": {
+    "ms":"iic/punc_ct-transformer_cn-en-common-vocab471067-large", 
+    "hf":""},
+  "file_path_metas": {
+    "init_param":"model.pt", 
+    "config":"config.yaml",
+    "tokenizer_conf": {"token_list": "tokens.json", "jieba_usr_dict": "jieba_usr_dict"},
+    "jieba_usr_dict": "jieba_usr_dict"
+  }
+}
