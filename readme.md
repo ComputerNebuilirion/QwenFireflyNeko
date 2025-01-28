@@ -30,11 +30,6 @@
 - g2p_en
 - wordsegment
 
-可以使用以下命令安装依赖项：
-
-```bash
-pip install torch transformers funasr pyaudio numpy
-```
 
 ## 使用方法
 
