@@ -1,4 +1,4 @@
-# Qwen-Firefly-Neko-STT-Multi
+# Qwen-Firefly-Neko
 
 ## 注意
 
@@ -9,7 +9,7 @@
 
 ## 项目简介
 
-`Qwen-Firefly-Neko-STT` 是一个集成了语音转文字（STT）和大语言模型（LLM）处理的项目。该项目使用 PyTorch 和 Transformers 库，通过并行处理实现实时语音转文字和文本生成。正如名字所见，本项目构建了一个流萤猫酱的形象。
+`Qwen-Firefly-Neko` 是一个集成了语音转文字（STT）和大语言模型（LLM）处理的项目。该项目使用 PyTorch 和 Transformers 库，通过并行处理实现实时语音转文字和文本生成。正如名字所见，本项目构建了一个流萤猫酱的形象。
 
 ## 功能
 
@@ -20,7 +20,7 @@
 
 ## 依赖
 
-请确保安装以下依赖项：
+请确保安装以下依赖项：(`pip install`)
 
 - Python 3.8+
 - PyTorch
@@ -32,6 +32,7 @@
 - g2p_en
 - wordsegment
 
+其中一些模块的下载需要依赖Microsoft Visual Studio，可下载vs然后选择“C/C++桌面开发”安装完后再用`pip`下载这些模块。
 
 ## 使用方法
 
@@ -44,7 +45,7 @@
 在 QwenFireflyNekoSTT 类的 `__init__` 方法中，初始化了音频流、模型和相关配置。
 
 ### 语音转文字（STT）
-`stt` 方法负责从音频中提取文本，并在检测到停顿时调用 `correct` 方法进行文本修正。
+`stt` 方法负责从音频中提取文本，并在检测到停顿时调用 `correct` 方法进行文本修正。(`correct`方法未实装，因为这样太慢了)
 
 ### 文本生成和修正（LLM）
 `process_llm` 方法负责处理 LLM 的生成任务。
