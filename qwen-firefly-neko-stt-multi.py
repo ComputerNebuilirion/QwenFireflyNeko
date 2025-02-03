@@ -57,7 +57,8 @@ class QwenFireflyNeko:
             model=f"{model_dir}/speech_seaco_paraformer_large_asr_nat-zh-cn-16k-common-vocab8404-pytorch", 
             vad_model=f"{model_dir}/speech_fsmn_vad_zh-cn-16k-common-pytorch", 
             punc_model=f"{model_dir}/punc_ct-transformer_cn-en-common-vocab471067-large",  
-            disable_update=True
+            disable_update=True,
+            ngpu=0
         )
 
     def synthesize(self, GPT_model_path, SoVITS_model_path, ref_audio_path, ref_text_path, ref_language, target_text_path, target_language, output_path):
