@@ -33,7 +33,7 @@
 - wordsegment
 - live2d-py
 
-其中一些模块的下载需要依赖Microsoft Visual Studio，可下载vs然后选择“C/C++桌面开发”安装完后再用`pip`下载这些模块。
+其中一些模块的下载需要依赖Microsoft Visual Studio，可下载vs然后选择“C/C++桌面开发”安装完后再用`pip`下载这些模块就不会`build wheels error`了。
 
 ## 使用方法
 
