@@ -21,7 +21,7 @@
 
 ## 依赖
 
-请确保安装以下依赖项：(`pip install`)
+请确保安装以下依赖项：(可使用`pip install -r requirements.txt`下载)
 
 - PyTorch
 - Transformers
