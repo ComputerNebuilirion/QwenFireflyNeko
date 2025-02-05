@@ -1,0 +1,9 @@
+PyTorch
+Transformers
+FunASR
+PyAudio
+NumPy
+jieba_fast
+g2p_en
+wordsegment
+live2d-py
