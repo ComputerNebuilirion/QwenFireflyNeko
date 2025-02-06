@@ -1,4 +1,4 @@
-# Qwen-Firefly-Neko
+# Firefly-Neko
 
 ## 注意
 
@@ -6,7 +6,7 @@
 
 ## 项目简介
 
-`Qwen-Firefly-Neko` 是一个集成了live2d模型、语音转文字（STT）和大语言模型（LLM）处理的项目。该项目使用 PyTorch 和 Transformers 库，通过并行处理实现实时语音转文字和文本生成。正如名字所见，本项目构建了一个流萤猫酱的形象。
+`Firefly-Neko` 是一个集成了live2d模型、语音转文字（STT）和大语言模型（LLM）处理的项目。该项目使用 PyTorch 和 Transformers 库，通过并行处理实现实时语音转文字和文本生成。正如名字所见，本项目构建了一个流萤猫酱的形象。
 
 ## 功能
 
