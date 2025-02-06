@@ -2,9 +2,7 @@
 
 ## 注意
 
-该仓库仅存储了部分代码文件，GPT-SoVITS的核心文件以及所有大于100M的文件均被删除（包括模型文件和一些代码文件等等），肯定无法直接运行。
-
-🤗[Hugging-Face链接](https://huggingface.co/Shiina-Mahiru/Firefly-Neko)
+该仓库仅存储了部分代码文件，GPT-SoVITS的核心文件以及所有大于100M的文件均被删除（包括模型文件和一些代码文件等等），肯定无法直接运行。具体运行方法看后文。
 
 ## 项目简介
 
@@ -36,7 +34,7 @@
 
 ## 使用方法
 
-去🤗Hugging-Face下载，到本地后直接运行`firefly-neko-stt-live2d-multi.py`即可。
+去🤗Hugging-Face下载，到本地后先将`GPT-SoVITS-v2-240821.zip`解压，然后直接运行`firefly-neko-stt-live2d-multi.py`即可。
 
 🤗[Hugging-Face链接](https://huggingface.co/Shiina-Mahiru/Firefly-Neko)
 
