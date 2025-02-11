@@ -1,8 +1,8 @@
-PyTorch
-Transformers
-FunASR
-PyAudio
-NumPy
+torch
+transformers
+funasr
+pyaudio
+numpy
 jieba_fast
 g2p_en
 wordsegment
