@@ -15,6 +15,7 @@
 - 并行处理 STT 和 LLM 任务
 - 自动播放生成的语音文件（使用`GPT-SoVITS`，流萤语音模型使用的是b站白菜工厂1145号员工大佬的[GPT-SoVITS模型](https://www.bilibili.com/video/BV1sC411b7Ei/?spm_id_from=333.1387.upload.video_card.click&vd_source=76bb9f3f8ae762d5e5de82c84b34f583)，🤗[Hugging Face地址](https://huggingface.co/baicai1145/GPT-SoVITS-STAR)）
 - 具有live2d模型（使用是b站依七哒大佬的[流萤前瞻小人模型](https://www.bilibili.com/video/BV1kJ4m1g7fs/?spm_id_from=333.1387.upload.video_card.click&vd_source=76bb9f3f8ae762d5e5de82c84b34f583))
+- live2d可交互，可以点击头部、脸部、脚部、手部，还有欧派😋
 
 ## 使用方法
 
