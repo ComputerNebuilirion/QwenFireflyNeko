@@ -2,8 +2,12 @@ torch
 transformers
 funasr
 pyaudio
+pygame
 numpy
 jieba_fast
 g2p_en
+nltk
+wave
+soundfile
 wordsegment
 live2d-py
