@@ -27,18 +27,14 @@ live2d.setLogEnable(False)
 
 class QwenFireflyNeko:
     def __init__(self):
+        print("初始化中...")
         pygame.init()
         pygame.mixer.init()
         live2d.init()
-        #self.audioPlayed = True
         self.bat_file_path = 'GPT-SoVITS-v2-240821\\go-cli.bat'
         self.model_name = "model/Qwen2.5-7B-Instruct"
-        print("初始化中...")
-
         with open('background.txt', 'r', encoding='utf-8') as file:
             self.background = file.read()
-        with open('STT-background.txt', 'r', encoding='utf-8') as file:
-            self.stt_background = file.read()
 
         self.end_of_talk = False
         self.cache = {}
@@ -90,18 +86,24 @@ class QwenFireflyNeko:
             )
 
         self.live2d_model.Resize(*display)
-
         self.running = True
-
-        # 关闭自动眨眼
-        self.live2d_model.SetAutoBlinkEnable(False)
-        # 关闭自动呼吸
-        self.live2d_model.SetAutoBreathEnable(False)
+        #self.live2d_model.SetAutoBlinkEnable(True)
+        #self.live2d_model.SetAutoBreathEnable(False)
         self.dx: float = 0.0
         self.dy: float = 0.0
         self.scale: float = 1.0
         self.wavHandler = WavHandler()
         self.lipSyncN = 2.5
+        self.headId = ["Part17", "Part12", "Part11", "Part14", "Part13", "Part10", "Part54", "Part18"]
+        self.faceId = ["Part26"]
+        self.feetId = ["Part50", "Part51"]
+        self.breastId = ["Part40", "Part45"]
+        self.handId = ["Part44", "Part46"]
+        self.isTapHead = False
+        self.isTapFace = False
+        self.isTapFeet = False
+        self.isTapBreast = False
+        self.isTapHand = False
         fc = None
         sc = None
         self.live2d_model.StartRandomMotion("TapBody", 300, sc, fc)
@@ -116,28 +118,6 @@ class QwenFireflyNeko:
         # log.Debug(f"Part Count: {model.GetPartCount()}")
         self.partIds = self.live2d_model.GetPartIds()
         self.currentTopClickedPartId = None
-
-    def on_start_motion_callback(self, group: str, no: int):
-        #log.Info("start motion: [%s_%d]" % (group, no))
-        audioPath = "output/output.wav"
-        pygame.mixer.music.load(audioPath)
-        pygame.mixer.music.play()
-        #self.audioPlayed = True
-        #log.Info("start lipSync")
-        self.wavHandler.Start(audioPath)
-
-    def on_finish_motion_callback(self):
-        #log.Info("motion finished")
-        return
-
-        # 获取全部可用参数
-    
-        # print(len(partIds))
-        # log.Debug(f"Part Ids: {partIds}")
-        # log.Debug(f"Part Id for index 2: {model.GetPartId(2)}")
-        # model.SetPartOpacity(partIds.index("PartHairBack"), 0.5)
-
-    
 
     def getHitFeedback(self, x, y):
         t = time.time()
@@ -157,9 +137,6 @@ class QwenFireflyNeko:
 
     
     def live2d_main(self):
-        
-
-        #audioPlayed = False
         self.live2d_model.SetExpression("expression2.exp3")
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -167,76 +144,62 @@ class QwenFireflyNeko:
                 return
             if event.type == pygame.MOUSEBUTTONDOWN:
                 x, y = pygame.mouse.get_pos()
-                    # currentTopClickedPartId = getHitFeedback(x, y)
-                    # log.Info(f"Clicked Part: {currentTopClickedPartId}")
+                currentTopClickedPartId = self.getHitFeedback(x, y)
+                log.Info(f"Clicked Part: {currentTopClickedPartId}")
+                if currentTopClickedPartId in self.headId:
+                    print("点击了头部")
+                    self.isTapHead = True
+                if currentTopClickedPartId in self.feetId:
+                    print("点击了脚部")
+                    self.isTapFeet = True
+                if currentTopClickedPartId in self.faceId:
+                    print("点击了脸部")
+                    self.isTapFace = True
+                if currentTopClickedPartId in self.breastId:
+                    print("点击了胸部")
+                    self.isTapBreast = True
+                if currentTopClickedPartId in self.handId:
+                    print("点击了手部")
+                    self.isTapHand = True
                     # model.Touch(x, y, onFinishMotionHandler=lambda : print("motion finished"), onStartMotionHandler=lambda group, no: print(f"started motion: {group} {no}"))
                     # model.StartRandomMotion(group="TapBody", onFinishMotionHandler=lambda : print("motion finished"), onStartMotionHandler=lambda group, no: print(f"started motion: {group} {no}"))
                     #model.SetRandomExpression()
-                self.live2d_model.StartRandomMotion(priority=3)
+                #self.live2d_model.StartRandomMotion(priority=3)
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT:
                     self.dx -= 0.1
                 elif event.key == pygame.K_RIGHT:
                     self.dx += 0.1
-
                 elif event.key == pygame.K_UP:
                     self.dy += 0.1
-
                 elif event.key == pygame.K_DOWN:
                     self.dy -= 0.1
-
                 elif event.key == pygame.K_i:
                     self.scale += 0.01
-
                 elif event.key == pygame.K_u:
                     self.scale -= 0.01
-                        
                 elif event.key == pygame.K_r:
                     self.live2d_model.StopAllMotions()
                     self.live2d_model.ResetPose()
-                        
                 elif event.key == pygame.K_e:
                     self.live2d_model.ResetExpression()
-
             if event.type == pygame.MOUSEMOTION:
-                        # 实现拖拽
                 self.live2d_model.Drag(*pygame.mouse.get_pos())
-                        # 测试性能？
                 self.currentTopClickedPartId = self.getHitFeedback(*pygame.mouse.get_pos())
-                        # pass
 
         self.live2d_model.Update()
 
         if self.currentTopClickedPartId is not None:
             pidx = self.partIds.index(self.currentTopClickedPartId)
             self.live2d_model.SetPartOpacity(pidx, 0.5)
-                # 在此以 255 为最大灰度级
-                # 原色和屏幕色取反并相乘，再取反
-                # 以红色通道为例：r = 255 - (255 - 原色.r) * (255 - screenColor.r) / 255
-                # 通道数值越大，该通道颜色对最终结果的贡献越大，下面的调用即为突出蓝色的效果
-                # model.SetPartScreenColor(pidx, .0, 0., 1.0, 1)
-
-                # r = multiplyColor.r * 原色.r / 255
-                # 下面即为仅保留蓝色通道的结果
-            self.live2d_model.SetPartMultiplyColor(pidx, .0, .0, 1., .9)
+            #self.live2d_model.SetPartMultiplyColor(pidx, .0, .0, 1., .1)
 
         if self.wavHandler.Update():
                 # 利用 wav 响度更新 嘴部张合
             self.live2d_model.AddParameterValue(
                 StandardParams.ParamMouthOpenY, self.wavHandler.GetRms() * self.lipSyncN
             )
-
-        #if not self.audioPlayed:
-                # 播放一个不存在的动作
-        #    self.live2d_model.StartMotion(
-        #        "",
-        #        0,
-        #        live2d.MotionPriority.FORCE,
-        #        self.on_start_motion_callback,
-        #        self.on_finish_motion_callback,
-        #    )
-
             # 一般通过设置 param 去除水印
             # model.SetParameterValue("Param14", 1, 1)
 
@@ -379,8 +342,8 @@ class QwenFireflyNeko:
         self.play_wav("output/output.wav")
 
     def main(self):
-        print("初始化完成！")
         self.live2d_init()
+        print("初始化完成！")
         with concurrent.futures.ThreadPoolExecutor() as executor: #ThreadPoolExecutor
             future_stt = executor.submit(self.stt)
             while self.running:
@@ -391,6 +354,21 @@ class QwenFireflyNeko:
                     future_stt = executor.submit(self.stt)
 
                 self.live2d_main()
+                if self.isTapHead:
+                    executor.submit(self.process_llm, "主人摸摸流萤猫酱的头")
+                    self.isTapHead = False
+                if self.isTapFace:
+                    executor.submit(self.process_llm, "主人摸摸流萤猫酱的脸")
+                    self.isTapFace = False
+                if self.isTapFeet:
+                    executor.submit(self.process_llm, "主人摸摸流萤猫酱的脚")
+                    self.isTapFeet = False
+                if self.isTapBreast:
+                    executor.submit(self.process_llm, "主人摸摸流萤猫酱的胸")
+                    self.isTapBreast = False
+                if self.isTapHand:
+                    executor.submit(self.process_llm, "主人摸摸流萤猫酱的手")
+                    self.isTapHand = False
 
             live2d.dispose()
             pygame.quit()
