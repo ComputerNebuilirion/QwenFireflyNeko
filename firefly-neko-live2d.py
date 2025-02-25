@@ -1,5 +1,6 @@
 import os
 import time
+import json
 import re
 import wave
 import pyaudio
@@ -18,7 +19,7 @@ from live2d.v3 import StandardParams
 from live2d.utils import log
 from live2d.utils.lipsync import WavHandler
 sys.path.append('./GPT-SoVITS-v2-240821/GPT_SoVITS')
-from inference_webui import change_gpt_weights, change_sovits_weights, get_tts_wav
+from inference_webui import change_gpt_weights, change_sovits_weights, get_tts_wav # type: ignore
 i18n = I18nAuto()
 nltk.download('averaged_perceptron_tagger')
 nltk.download('averaged_perceptron_tagger_eng')
@@ -31,11 +32,11 @@ class QwenFireflyNeko:
         pygame.init()
         pygame.mixer.init()
         live2d.init()
-        self.bat_file_path = 'GPT-SoVITS-v2-240821\\go-cli.bat'
         self.model_name = "model/Qwen2.5-7B-Instruct"
         with open('background.txt', 'r', encoding='utf-8') as file:
             self.background = file.read()
 
+        self.dialog_history = []
         self.end_of_talk = False
         self.cache = {}
         self.result_text = ""
@@ -114,23 +115,16 @@ class QwenFireflyNeko:
                 param.id, param.type, param.value, param.max, param.min, param.default
             )
 
-        # 设置 part 透明度
-        # log.Debug(f"Part Count: {model.GetPartCount()}")
         self.partIds = self.live2d_model.GetPartIds()
         self.currentTopClickedPartId = None
 
     def getHitFeedback(self, x, y):
-        t = time.time()
         hitPartIds = self.live2d_model.HitPart(x, y, False)
-        #print(f"hit part cost: {time.time() - t}s")
-        #print(f"hit parts: {hitPartIds}")
         if self.currentTopClickedPartId is not None:
             pidx = self.partIds.index(self.currentTopClickedPartId)
             self.live2d_model.SetPartOpacity(pidx, 1)
-            # model.SetPartScreenColor(pidx, 0.0, 0.0, 0.0, 1.0)
             self.live2d_model.SetPartMultiplyColor(pidx, 1.0, 1.0, 1., 1)
-            # print("Part Screen Color:", model.GetPartScreenColor(pidx))
-            #print("Part Multiply Color:", self.live2d_model.GetPartMultiplyColor(pidx))
+
         if len(hitPartIds) > 0:
             ret = hitPartIds[0]
             return ret
@@ -193,7 +187,6 @@ class QwenFireflyNeko:
         if self.currentTopClickedPartId is not None:
             pidx = self.partIds.index(self.currentTopClickedPartId)
             self.live2d_model.SetPartOpacity(pidx, 0.5)
-            #self.live2d_model.SetPartMultiplyColor(pidx, .0, .0, 1., .1)
 
         if self.wavHandler.Update():
                 # 利用 wav 响度更新 嘴部张合
@@ -238,6 +231,14 @@ class QwenFireflyNeko:
             output_wav_path = os.path.join(output_path, "output.wav")
             sf.write(output_wav_path, last_audio_data, last_sampling_rate)
             print(f"Audio saved to {output_wav_path}")
+
+    def update_history(self):
+        with open('dialog_history.json', 'w', encoding='utf-8') as file:
+            file.write('\n'.join([json.dumps(msg, ensure_ascii=False) for msg in self.dialog_history]))
+
+    def read_history(self):
+        with open('dialog_history.json', 'r', encoding='utf-8') as file:
+            self.dialog_history = [json.loads(line.strip()) for line in file if line.strip()]
 
     def extract_language(self, text):
         text = re.sub(r'（[^）]*）', '', text)
@@ -302,10 +303,10 @@ class QwenFireflyNeko:
 
 #llm
     def process_llm(self, prompt):
+        self.read_history()
         start_time = time.time()
-        messages = [
-            {"role": "system", "content": self.background},
-            {"role": "user", "content": prompt}
+        messages = [{"role": "system", "content": self.background}] + self.dialog_history + [
+        {"role": "user", "content": prompt}
         ]
         text = self.tokenizer.apply_chat_template(
             messages,
@@ -326,6 +327,12 @@ class QwenFireflyNeko:
         response = response.replace("流萤猫酱：", "")
         print("合成完成，耗时：", time.time() - start_time)
         print("已生成文本，正在合成语音...")
+
+        self.dialog_history.append({"role": "user", "content": prompt})
+        self.dialog_history.append({"role": "assistant", "content": response})
+        print(self.dialog_history)
+        self.update_history()
+        
         target_text = self.extract_language(response)
         with open('target_text.txt', 'w', encoding='utf-8') as file:
             file.write(target_text)
@@ -354,6 +361,7 @@ class QwenFireflyNeko:
                     future_stt = executor.submit(self.stt)
 
                 self.live2d_main()
+                
                 if self.isTapHead:
                     executor.submit(self.process_llm, "主人摸摸流萤猫酱的头")
                     self.isTapHead = False

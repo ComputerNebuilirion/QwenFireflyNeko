@@ -25,7 +25,7 @@
 
 - 然后在该目录下输入`pip install -r requirements.txt`安装依赖，其中一些模块的下载需要依赖Microsoft Visual Studio，可下载vs然后选择“C/C++桌面开发”安装完后再用`pip`下载这些模块就不会`build wheels error`了；
 
-- 接着直接运行`firefly-neko-stt-live2d-multi.py`即可。
+- 接着直接运行`firefly-neko-live2d.py`即可。
 
 ## 注意事项
 - 请确保在运行脚本前，所有依赖项和模型文件已正确安装和配置。
